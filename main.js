@@ -14,6 +14,8 @@ function urlBase64ToUint8Array(base64String) {
     }
     return outputArray;
 }
+//https://mensajeropush.herokuapp.com/
+//http://localhost:3000/subscription'
 
 const subscription = async () => {
     if ('serviceWorker' in navigator) {
@@ -23,8 +25,9 @@ const subscription = async () => {
                 const register = registration;
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
                     .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
-                        fetch('http://localhost:3000/subscription', {
+                        fetch('https://mensajeropush.herokuapp.com/subscription', {
                             method: 'POST',
+                            mode: 'cors',
                             body: JSON.stringify(subscription),
                             headers: {
                                 'Content-Type': 'application/json'
@@ -32,7 +35,11 @@ const subscription = async () => {
                         })
                             .then(() => {
                                 console.log('suscripto ok!');
-                            });
+                            })
+                            .catch(err => {
+                                //alert(err)
+                                console.log('error!');
+                            })
                     });
             }, /*catch*/ function (error) {
                 console.log('Service worker registration failed:', error);
