@@ -14,8 +14,8 @@ function urlBase64ToUint8Array(base64String) {
     }
     return outputArray;
 }
-//https://mensajeropush.herokuapp.com/
-//http://localhost:3000/subscription'
+//https://mensajeropush.herokuapp.com/subscription
+//https://localhost:3000/subscription'
 
 const subscription = async () => {
     if ('serviceWorker' in navigator) {
@@ -25,9 +25,10 @@ const subscription = async () => {
                 const register = registration;
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
                     .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
-                        fetch('https://mensajeropush.herokuapp.com/subscription', {
+                        
+                        fetch('http://localhost:3000/subscription', {
                             method: 'POST',
-                            mode: 'cors',
+                            //mode: 'cors',
                             body: JSON.stringify(subscription),
                             headers: {
                                 'Content-Type': 'application/json'
@@ -38,7 +39,7 @@ const subscription = async () => {
                             })
                             .catch(err => {
                                 //alert(err)
-                                console.log('error!');
+                                console.log('error!', err);
                             })
                     });
             }, /*catch*/ function (error) {
