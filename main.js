@@ -25,8 +25,8 @@ const subscription = async () => {
                 const register = registration;
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
                     .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
-                        
-                        fetch('http://localhost:3000/subscription', {
+
+                        fetch('https://mensajeropush.herokuapp.com/subscription', {
                             method: 'POST',
                             //mode: 'cors',
                             body: JSON.stringify(subscription),
@@ -48,7 +48,15 @@ const subscription = async () => {
     } else {
         console.log('Service workers are not supported.');
     }
-}
 
+}
 subscription();
+
+if ('permissions' in navigator) {
+    navigator.permissions.query({ name: 'notifications' }).then(function (notificationPerm) {
+        notificationPerm.onchange = function () {
+            console.log("Parece que el usuario cambió los permisos. Nuevo permiso: " + notificationPerm.state);
+        };
+    });
+}
 
