@@ -26,9 +26,9 @@ const subscription = async () => {
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
                     .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
 
-                        fetch('https://mensajeropush.herokuapp.com/subscription', {
+                        fetch('http://localhost:3000/subscription', {
                             method: 'POST',
-                            //mode: 'cors',
+                            mode: 'cors',
                             body: JSON.stringify(subscription),
                             headers: {
                                 'Content-Type': 'application/json'
