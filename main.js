@@ -15,7 +15,7 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 //https://mensajeropush.herokuapp.com/subscription
-//https://localhost:3000/subscription'
+//http://localhost:3000/subscription'
 
 const subscription = async () => {
     if ('serviceWorker' in navigator) {

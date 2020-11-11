@@ -3,7 +3,7 @@
 self.addEventListener('push', e => {
     const data = e.data.json();
     console.log(data);
-    localStorage.setItem('mensaje', JSON.stringify(data));
+    //localStorage.setItem('mensaje', JSON.stringify(data));
     self.registration.showNotification(data.title, {
         body: data.message,
         icon: '/images/marcador.png'
