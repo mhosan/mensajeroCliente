@@ -22,7 +22,9 @@ const subscription = async () => {
         navigator.serviceWorker.register('./worker.js', { scope: '/' })
             .then(function (registration) {
                 console.log('Service worker registration succeeded:', registration);
+
                 const register = registration;
+                
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
                     .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
 
