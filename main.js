@@ -15,7 +15,7 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 
-const urlLocal = 'http://localhost:3000/subscription';
+const urlLocal = 'http://localhost:3000';
 const urlRemota = 'https://mensajeropush.herokuapp.com/subscription';
 
 //---------------------------------------------------------------------
@@ -34,7 +34,7 @@ const subscription = async () => {
                 const register = registration;
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
                     .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
-                        fetch(urlLocal, {
+                        fetch(urlLocal + '/subscription', {
                             method: 'POST',
                             mode: 'cors',
                             body: JSON.stringify(subscription),
@@ -78,22 +78,24 @@ if ('permissions' in navigator) {
         notificationPerm.onchange = function () {
             console.log("El usuario cambió los permisos. Nuevo permiso: " + notificationPerm.state);
             if (notificationPerm.state == 'denied') {
-                console.log(`Se enviará una petición de borrar la clave ${localStorage.getItem('auth')}`)
-                // fetch(urlLocal, {
-                //                 method: 'DELETE',
-                //                 mode: 'cors',
-                //                 body: localStorage.getItem('auth'),
-                //                 headers: {
-                //                     'Content-Type': 'application/json'
-                //                 }
-                //             })
-                //                 .then(() => {
-                //                     console.log('Se envió el pedido de borrar la subscripción ok!');
-                //                 })
-                //                 .catch(err => {
-                //                     //alert(err)
-                //                     console.log('error!', err);
-                //                 })
+                let claveBorrar = localStorage.getItem('auth');
+                claveBorrar = claveBorrar.slice(0,-2);
+                console.log(`Se enviará una petición de borrar la clave ${claveBorrar}`)
+                fetch(urlLocal + '/delete/' + claveBorrar, {
+                    method: 'DELETE',
+                    mode: 'cors',
+                    body: JSON.stringify(),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(() => {
+                        console.log('Se envió el pedido de borrar la subscripción ok!');
+                    })
+                    .catch(err => {
+                        //alert(err)
+                        console.log('Error con el borrado de la clave', err);
+                    })
             }
         };
     });
