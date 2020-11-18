@@ -16,7 +16,7 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 const urlLocal = 'http://localhost:3000';
-const urlRemota = 'https://mensajeropush.herokuapp.com/subscription';
+const urlRemota = 'https://mensajeropush.herokuapp.com';
 
 //---------------------------------------------------------------------
 // mh: 17/11/20
@@ -34,7 +34,7 @@ const subscription = async () => {
                 const register = registration;
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
                     .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
-                        fetch(urlLocal + '/subscription', {
+                        fetch(urlRemota + '/subscription', {
                             method: 'POST',
                             mode: 'cors',
                             body: JSON.stringify(subscription),
@@ -64,6 +64,8 @@ const subscription = async () => {
 }
 subscription();
 
+
+
 //---------------------------------------------------------------------
 // mh: 17/11/20
 // Detectar cuando el usuario hace cambios en los permisos de recibir
@@ -81,7 +83,7 @@ if ('permissions' in navigator) {
                 let claveBorrar = localStorage.getItem('auth');
                 claveBorrar = claveBorrar.slice(0,-2);
                 console.log(`Se enviará una petición de borrar la clave ${claveBorrar}`)
-                fetch(urlLocal + '/delete/' + claveBorrar, {
+                fetch(urlRemota + '/delete/' + claveBorrar, {
                     method: 'DELETE',
                     mode: 'cors',
                     body: JSON.stringify(),
