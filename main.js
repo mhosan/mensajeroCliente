@@ -15,8 +15,13 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 
+//---------------------------------------------------------------------
+// mh: 19/11/20
+// URL a utilizar. Seteo de la const a utilizar
+//---------------------------------------------------------------------
 const urlLocal = 'http://localhost:3000';
 const urlRemota = 'https://mensajeropush.herokuapp.com';
+const url = urlLocal;
 
 //---------------------------------------------------------------------
 // mh: 17/11/20
@@ -34,7 +39,7 @@ const subscription = async () => {
                 const register = registration;
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
                     .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
-                        fetch(urlLocal + '/subscription', {
+                        fetch(url + '/subscription', {
                             method: 'POST',
                             mode: 'cors',
                             body: JSON.stringify(subscription),
@@ -90,7 +95,7 @@ if ('permissions' in navigator) {
                 console.log('valor a borrar:', objJson.valor);
 
                 console.log(`Se enviará una petición de borrar la clave ${claveBorrar}`)
-                fetch(urlLocal + '/borrar', {
+                fetch(url + '/borrar', {
                     method: 'PUT',
                     mode: 'cors',
                     body: JSON.stringify(objJson),
