@@ -34,7 +34,7 @@ const subscription = async () => {
                 const register = registration;
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
                     .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
-                        fetch(urlRemota + '/subscription', {
+                        fetch(urlLocal + '/subscription', {
                             method: 'POST',
                             mode: 'cors',
                             body: JSON.stringify(subscription),
@@ -45,7 +45,8 @@ const subscription = async () => {
                             .then(() => {
                                 const laSuscrip = JSON.stringify(subscription);
                                 const quebrado = laSuscrip.split("auth");
-                                const elAuth = quebrado[1].substring(1);
+                                let elAuth = quebrado[1].substring(1);
+                                elAuth = elAuth.slice(0,-2);
                                 //guardar la subscripción en localStorage
                                 localStorage.setItem('auth', elAuth);
                                 console.log(`Suscripto ok!. El auth: ${elAuth} se guardó localmente.`);
@@ -74,6 +75,10 @@ subscription();
 // utilizando el usuario hasta ese momento.
 // Si el usuario vuelve a permitir las notificaciones push, se generará
 // una nueva clave.
+// mh: 18/11/20, se envia la peticion de borrar (el fetch) encubierto en
+// un put a la url ../borrar, para evitar problemas con los argumentos 
+// de este request desde el archivo 'main' del cliente y el request que
+// se envia directo via api request
 //---------------------------------------------------------------------
 if ('permissions' in navigator) {
     navigator.permissions.query({ name: 'notifications' }).then(function (notificationPerm) {
@@ -81,12 +86,14 @@ if ('permissions' in navigator) {
             console.log("El usuario cambió los permisos. Nuevo permiso: " + notificationPerm.state);
             if (notificationPerm.state == 'denied') {
                 let claveBorrar = localStorage.getItem('auth');
-                claveBorrar = claveBorrar.slice(0,-2);
+                const objJson = { "valor" : claveBorrar};
+                console.log('valor a borrar:', objJson.valor);
+
                 console.log(`Se enviará una petición de borrar la clave ${claveBorrar}`)
-                fetch(urlRemota + '/delete/' + claveBorrar, {
-                    method: 'DELETE',
+                fetch(urlLocal + '/borrar', {
+                    method: 'PUT',
                     mode: 'cors',
-                    body: JSON.stringify(),
+                    body: JSON.stringify(objJson),
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -95,7 +102,6 @@ if ('permissions' in navigator) {
                         console.log('Se envió el pedido de borrar la subscripción ok!');
                     })
                     .catch(err => {
-                        //alert(err)
                         console.log('Error con el borrado de la clave', err);
                     })
             }
