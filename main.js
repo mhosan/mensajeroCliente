@@ -21,7 +21,7 @@ function urlBase64ToUint8Array(base64String) {
 //---------------------------------------------------------------------
 const urlLocal = 'http://localhost:3000';
 const urlRemota = 'https://mensajeropush.herokuapp.com';
-const url = urlRemota;
+const url = urlLocal;
 
 //---------------------------------------------------------------------
 // mh: 17/11/20
