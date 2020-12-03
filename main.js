@@ -56,7 +56,6 @@ const subscription = async () => {
                                 elAuth = elAuth.slice(2, -3);
                                 console.log(`el auth: ${elAuth}`);
                                 //guardar la subscripción en localStorage
-                                localStorage.clear();
                                 localStorage.setItem('auth', elAuth);
                                 console.log(`Suscripto ok!. El auth: ${elAuth} se guardó localmente.`);
                             })
