@@ -21,7 +21,7 @@ function urlBase64ToUint8Array(base64String) {
 //---------------------------------------------------------------------
 const urlLocal = 'http://localhost:3000';
 const urlRemota = 'https://mensajeropush.herokuapp.com';
-const url = urlLocal;
+const url = urlRemota;
 
 //---------------------------------------------------------------------
 // mh: 17/11/20
@@ -33,13 +33,13 @@ const url = urlLocal;
 //---------------------------------------------------------------------
 const subscription = async () => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./worker.js', { scope: '/' })
+        await navigator.serviceWorker.register('./worker.js', { scope: '/' })
             .then(function (registration) {
                 //console.log('Service worker registration succeeded:', registration);
                 const register = registration;
                 register.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) })
-                    .then((subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
-                        fetch(url + '/subscription', {
+                    .then(async (subscription) => {  //subscription es el objeto que va a utilizar el servidor para comunicarse
+                        await fetch(url + '/subscription', {
                             method: 'POST',
                             mode: 'cors',
                             body: JSON.stringify(subscription),
@@ -49,13 +49,11 @@ const subscription = async () => {
                         })
                             .then((response) => {
                                 console.log(response);
-                                //return response.text()
                                 const laSuscrip = JSON.stringify(subscription);
                                 const quebrado = laSuscrip.split("auth");
                                 let elAuth = quebrado[1].substring(1);
                                 elAuth = elAuth.slice(2, -3);
                                 console.log(`el auth: ${elAuth}`);
-                                //guardar la subscripción en localStorage
                                 localStorage.setItem('auth', elAuth);
                                 console.log(`Suscripto ok!. El auth: ${elAuth} se guardó localmente.`);
                             })
@@ -74,8 +72,6 @@ const subscription = async () => {
 }
 
 subscription();
-
-
 
 //---------------------------------------------------------------------
 // mh: 17/11/20

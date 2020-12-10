@@ -1,20 +1,36 @@
-//el worker será el encargado de escuchar, por lo tanto el listener va aqui
 
-self.addEventListener('push', e => {
-    const data = e.data.json();
-    console.log(data);
-    //localStorage.setItem('mensaje', JSON.stringify(data));
-    self.registration.showNotification(data.title, {
-        body: data.message,
-        icon: '/images/marcador.png'
-    });
-});
+self.addEventListener('push', event => {
+    const data = event.data.json();
+    const promiseChain = self.registration.showNotification(data.title,{body: data.message, icon: '/images/marcador.png'})
+    event.waitUntil(promiseChain);
 
-// Escuchamos el click en la ventana de notificación
-//self.addEventListener('notificationclick', event => {
-    //event.notification.close();
-    // recuperamos la url que pasamos en el options
-    //const { url } = event.notification.data;
-    //console.log(url);
-    //if (url) event.waitUntil(clients.openWindow(url));
-  //});
+    // .then(() => {
+    //     console.log(`Notificación ok!, data: ${data}`);
+    // })
+    // .catch(err => {
+    //     console.log(`Error en el worker en showNotification: ${err}`)
+    // })
+})
+    // self.addEventListener('push', e => {
+    //     const data = e.data.json();
+    //     console.log(data);
+    //const promiseChain = self.registration.showNotification('Hello, World.');
+    //e.waitUntil(promiseChain);
+    // self.registration.showNotification(
+    //     data.title,
+    //     {
+    //         body: data.message,
+    //         icon: '/images/marcador.png'
+    //     });
+    // self.registration.showNotification(
+    //          data.title,
+    //     {
+    //         body: data.message,
+    //         icon: '/images/marcador.png'
+    //     })
+    //     .then((resultado)=>{
+    //         console.log(`Notificación ok!`);
+    //     })
+    //     .catch((err)=>{ console.log(`Error en el worker en showNotification: ${err}`)})
+//});
+
