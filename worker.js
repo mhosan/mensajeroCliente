@@ -3,14 +3,14 @@ self.addEventListener('push', event => {
     const data = event.data.json();
     const promiseChain = self.registration.showNotification(data.title,{body: data.message, icon: '/images/marcador.png'})
     event.waitUntil(promiseChain);
+});
 
-    // .then(() => {
+ // .then(() => {
     //     console.log(`Notificación ok!, data: ${data}`);
     // })
     // .catch(err => {
     //     console.log(`Error en el worker en showNotification: ${err}`)
     // })
-})
     // self.addEventListener('push', e => {
     //     const data = e.data.json();
     //     console.log(data);
