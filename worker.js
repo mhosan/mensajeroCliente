@@ -7,7 +7,7 @@ self.addEventListener('push', event => {
             body: data.message, 
             icon: '/images/pizarra.png',
             badge: '/images/geoloca.png',
-            image: '/images/billetera7.jpg'
+            image: '/images/billetera7.jpg',
         })
     event.waitUntil(promiseChain);
 });
